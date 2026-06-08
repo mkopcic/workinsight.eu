@@ -164,7 +164,7 @@ return [
     'features' => [
         // Registracija je namjerno isključena — korisnike kreira admin (seed/Filament).
         Features::resetPasswords(),
-        // Features::emailVerification(),
+        Features::emailVerification(),
         Features::updateProfileInformation(),
         Features::updatePasswords(),
     ],

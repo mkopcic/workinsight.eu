@@ -54,10 +54,23 @@ Seed: `php artisan db:seed --class=RolesAndAdminSeeder`.
 
 `/`→200, `/login`→200, `/forgot-password`→200, `/register`→404, `/dashboard` (gost)→302 `/login`, `/dashboard` (ulogiran)→200, Tabler CSS→200, login admina radi.
 
+## Filament admin (gotovo)
+
+- **filament/filament v5.6** instaliran (Laravel 13 + Livewire 3 — verzijski gate prošao; novije od v4 iz arhitekture).
+- Panel na **`/admin`** (`app/Providers/Filament/AdminPanelProvider.php`), login `/admin/login`.
+- Pristup: `User implements FilamentUser`, `canAccessPanel()` → samo rola `admin`.
+
+## SMTP (gotovo)
+
+- `.env`: `MAIL_MAILER=smtp`, host **`workinsight.eu`** (ne `mail.workinsight.eu` — TLS cert CN je `workinsight.eu`), port 587 STARTTLS, user `workinsight`, from `workinsight@workinsight.eu`. Test slanja prošao.
+- Email verifikacija uključena (`verified` middleware na `/dashboard`).
+
+## Redirect po roli (gotovo)
+
+- `app/Http/Responses/LoginResponse.php` (bind u `FortifyServiceProvider::register`): admin → `/admin`, ostali → `/dashboard`.
+
 ## TODO (sljedeće)
 
-- Redirect po roli nakon logina (admin → Filament `/admin` kad se postavi; ostali → `/dashboard`) preko custom `LoginResponse`.
-- Email verifikacija + pravi SMTP (sad `MAIL_MAILER=log`).
-- Filament admin panel (Livewire↔Filament verzijski gate iz arhitekture).
-- Tabler preko Vite ulaza umjesto kopije u `public/` (ako se želi build pipeline).
-- Feature testovi za auth (namjerno preskočeni u ovom krugu).
+- **Eloquent modeli + relacije + factoriji** za sve domenske tablice → pa Filament Resources (brzi CRUD-ovi).
+- Tabler preko Vite ulaza umjesto kopije u `public/`.
+- Feature testovi (na kraju, prije CRUD-ova).
