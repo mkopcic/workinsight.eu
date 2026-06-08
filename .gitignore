@@ -1,3 +1,4 @@
+docs/GIT_CREDENTIALS.md
 *.log
 .DS_Store
 .env
