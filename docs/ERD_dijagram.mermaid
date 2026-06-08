@@ -1,0 +1,267 @@
+erDiagram
+    USERS ||--o| CUSTOMERS : "profil"
+    USERS ||--o| COMPANIES : "vlasnik"
+    USERS ||--o| STAFF_PROFILES : "osoblje"
+    USERS ||--o{ LINE_ASSIGNMENTS : "vozi"
+    USERS ||--o{ DRIVER_LOCATIONS : "salje GPS"
+    USERS ||--o{ DELIVERY_STATUS_LOGS : "mijenja status"
+
+    CUSTOMERS ||--o{ ADDRESSES : "ima"
+    COMPANIES ||--o{ ADDRESSES : "ima"
+    PENSIONERS ||--o{ ADDRESSES : "ima"
+    COMPANIES ||--o{ COMPANY_CONTACTS : "kontakti"
+    DELIVERY_LINES ||--o{ PENSIONERS : "raspored"
+
+    MEAL_CATEGORIES ||--o{ MEALS : "grupira"
+    MENUS ||--o{ MENU_ITEMS : "sadrzi"
+    MEALS ||--o{ MENU_ITEMS : "nudi se"
+
+    CUSTOMERS ||--o{ SUBSCRIPTIONS : "pretplata"
+    COMPANIES ||--o{ SUBSCRIPTIONS : "pretplata"
+    SUBSCRIPTIONS ||--o{ ORDERS : "generira"
+    CUSTOMERS ||--o{ ORDERS : "narucuje"
+    COMPANIES ||--o{ ORDERS : "narucuje"
+    ORDERS ||--o{ ORDER_LINES : "stavke"
+    MEALS ||--o{ ORDER_LINES : "jelo"
+    MENU_ITEMS ||--o{ ORDER_LINES : "iz menija"
+
+    DELIVERY_LINES ||--o{ LINE_ASSIGNMENTS : "dodjela"
+    LINE_ASSIGNMENTS ||--o{ DELIVERIES : "stopovi"
+    DELIVERY_LINES ||--o{ DELIVERIES : "ruta"
+    CUSTOMERS ||--o{ DELIVERIES : "prima"
+    COMPANIES ||--o{ DELIVERIES : "prima"
+    PENSIONERS ||--o{ DELIVERIES : "prima"
+    DELIVERIES ||--o| DELIVERIES : "prijenos kantice"
+    DELIVERIES ||--o{ DELIVERY_ITEMS : "sadrzaj"
+    ORDER_LINES ||--o{ DELIVERY_ITEMS : "izvor"
+    DELIVERIES ||--o{ DELIVERY_STATUS_LOGS : "audit"
+
+    CUSTOMERS ||--o{ CONTRACTS : "ugovor"
+    COMPANIES ||--o{ CONTRACTS : "ugovor"
+    CUSTOMERS ||--o{ INVOICE_EXPORTS : "racuni"
+    COMPANIES ||--o{ INVOICE_EXPORTS : "racuni"
+    INVOICE_EXPORTS ||--o{ INVOICE_EXPORT_LINES : "stavke"
+
+    USERS {
+        bigint id PK
+        string email UK
+        string google_id
+        string status
+        timestamp last_login_at
+    }
+    STAFF_PROFILES {
+        bigint id PK
+        bigint user_id FK
+        string vehicle_label
+        bigint default_line_id FK
+        bool active
+    }
+    CUSTOMERS {
+        bigint id PK
+        bigint user_id FK
+        char public_id UK
+        string oib
+        bigint default_address_id FK
+        string status
+    }
+    COMPANIES {
+        bigint id PK
+        bigint owner_user_id FK
+        char public_id UK
+        string legal_name
+        char oib UK
+        bigint hq_address_id FK
+        smallint employee_count
+        string status
+    }
+    COMPANY_CONTACTS {
+        bigint id PK
+        bigint company_id FK
+        string name
+        string email
+        string role_label
+    }
+    PENSIONERS {
+        bigint id PK
+        string external_para_id UK
+        bigint address_id FK
+        bigint delivery_line_id FK
+        timestamp para_synced_at
+        string status
+    }
+    ADDRESSES {
+        bigint id PK
+        string owner_type
+        bigint owner_id
+        string street
+        string city
+        decimal latitude
+        decimal longitude
+        bool is_default
+    }
+    MEAL_CATEGORIES {
+        bigint id PK
+        string name
+        int sort_order
+    }
+    MEALS {
+        bigint id PK
+        bigint meal_category_id FK
+        string name
+        json allergens
+        decimal base_price
+        bool active
+    }
+    MENUS {
+        bigint id PK
+        string menu_type
+        date week_start
+        string status
+        bigint created_by FK
+    }
+    MENU_ITEMS {
+        bigint id PK
+        bigint menu_id FK
+        date delivery_date
+        bigint meal_id FK
+        string slot
+        decimal price
+        int capacity
+    }
+    SUBSCRIPTIONS {
+        bigint id PK
+        string subscriber_type
+        bigint subscriber_id
+        string menu_type
+        string plan
+        json weekday_pattern
+        date start_date
+        date end_date
+        string status
+    }
+    ORDERS {
+        bigint id PK
+        char public_id UK
+        string order_number UK
+        string subscriber_type
+        bigint subscriber_id
+        bigint subscription_id FK
+        string order_type
+        string status
+        timestamp placed_at
+        decimal total_amount
+    }
+    ORDER_LINES {
+        bigint id PK
+        bigint order_id FK
+        date delivery_date
+        bigint menu_item_id FK
+        bigint meal_id FK
+        string beneficiary_type
+        bigint beneficiary_id
+        smallint quantity
+        decimal unit_price
+        decimal line_total
+        string status
+    }
+    DELIVERY_LINES {
+        bigint id PK
+        string name
+        string code UK
+        string zone
+        bigint default_driver_id FK
+        bool active
+    }
+    LINE_ASSIGNMENTS {
+        bigint id PK
+        bigint delivery_line_id FK
+        bigint driver_user_id FK
+        date service_date
+        string status
+    }
+    DELIVERIES {
+        bigint id PK
+        date service_date
+        bigint delivery_line_id FK
+        bigint line_assignment_id FK
+        string recipient_type
+        bigint recipient_id
+        json address_snapshot
+        decimal latitude
+        decimal longitude
+        smallint stop_sequence
+        string status
+        bigint carried_over_from_id FK
+        timestamp delivered_at
+    }
+    DELIVERY_ITEMS {
+        bigint id PK
+        bigint delivery_id FK
+        bigint order_line_id FK
+        bigint meal_id FK
+        smallint quantity
+    }
+    DELIVERY_STATUS_LOGS {
+        bigint id PK
+        bigint delivery_id FK
+        string from_status
+        string to_status
+        bigint driver_user_id FK
+        decimal latitude
+        decimal longitude
+        timestamp created_at
+    }
+    DRIVER_LOCATIONS {
+        bigint id PK
+        bigint driver_user_id FK
+        date service_date
+        decimal latitude
+        decimal longitude
+        timestamp recorded_at
+    }
+    CONTRACTS {
+        bigint id PK
+        char public_id UK
+        string contractable_type
+        bigint contractable_id
+        string contract_number UK
+        string status
+        string signed_pdf_path
+        date valid_until
+        timestamp reminder_sent_at
+    }
+    INVOICE_EXPORTS {
+        bigint id PK
+        string billable_type
+        bigint billable_id
+        smallint period_year
+        tinyint period_month
+        string idempotency_key UK
+        json payload
+        string external_invoice_id
+        string status
+    }
+    INVOICE_EXPORT_LINES {
+        bigint id PK
+        bigint invoice_export_id FK
+        string description
+        smallint quantity
+        decimal unit_price
+        decimal amount
+    }
+    MONTHLY_REPORTS {
+        bigint id PK
+        smallint period_year
+        tinyint period_month
+        string type
+        string file_path
+        timestamp emailed_at
+    }
+    PARA_SYNC_RUNS {
+        bigint id PK
+        string source
+        timestamp started_at
+        timestamp finished_at
+        int records_updated
+        string status
+    }
