@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <title>@yield('title', 'WorkInsight')</title>
-    <link href="{{ asset('tabler/css/tabler.min.css') }}" rel="stylesheet">
+    @vite('resources/js/tabler.js')
     <style>
         :root { --tblr-primary: #f97316; --tblr-primary-rgb: 249, 115, 22; }
         body { background-color: #f6f7f9; }
@@ -22,6 +22,5 @@
             @yield('content')
         </div>
     </div>
-    <script src="{{ asset('tabler/js/tabler.min.js') }}" defer></script>
 </body>
 </html>

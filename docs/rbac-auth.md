@@ -69,8 +69,13 @@ Seed: `php artisan db:seed --class=RolesAndAdminSeeder`.
 
 - `app/Http/Responses/LoginResponse.php` (bind u `FortifyServiceProvider::register`): admin → `/admin`, ostali → `/dashboard`.
 
+## Frontend bundlovi (Vite)
+
+- **Tabler (Bootstrap 5)** ide kroz zaseban Vite ulaz `resources/js/tabler.js` (`@tabler/core`), odvojeno od Tailwind/Filament bundlea — po arhitekturi. Guest layout koristi `@vite('resources/js/tabler.js')`.
+- `public/build` je gitignoriran → na deployu pokrenuti `npm install && npm run build`.
+
 ## TODO (sljedeće)
 
-- **Eloquent modeli + relacije + factoriji** za sve domenske tablice → pa Filament Resources (brzi CRUD-ovi).
-- Tabler preko Vite ulaza umjesto kopije u `public/`.
-- Feature testovi (na kraju, prije CRUD-ova).
+- **Eloquent modeli gotovi** (29 modela + relacije) → sljedeće **Filament Resources (brzi CRUD-ovi)**.
+- Domenski servisi (cijene, „7 dana unaprijed", noćno generiranje dostava).
+- Feature testovi (na kraju, prije/uz CRUD-ove).
