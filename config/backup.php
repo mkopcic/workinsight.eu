@@ -236,11 +236,11 @@ return [
         'notifiable' => Notifiable::class,
 
         'mail' => [
-            'to' => 'your@example.com',
+            'to' => env('BACKUP_NOTIFICATION_EMAIL', 'workinsight@workinsight.eu'),
 
             'from' => [
-                'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
-                'name' => env('MAIL_FROM_NAME', 'Example'),
+                'address' => env('MAIL_FROM_ADDRESS', 'workinsight@workinsight.eu'),
+                'name' => env('MAIL_FROM_NAME', 'WorkInsight'),
             ],
         ],
 

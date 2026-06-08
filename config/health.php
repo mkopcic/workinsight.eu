@@ -69,11 +69,11 @@ return [
         'only_on_failure' => false,
 
         'mail' => [
-            'to' => env('HEALTH_TO_ADDRESS', ''),
+            'to' => env('HEALTH_TO_ADDRESS', 'workinsight@workinsight.eu'),
 
             'from' => [
-                'address' => env('MAIL_FROM_ADDRESS', 'hello@example.com'),
-                'name' => env('MAIL_FROM_NAME', 'Example'),
+                'address' => env('MAIL_FROM_ADDRESS', 'workinsight@workinsight.eu'),
+                'name' => env('MAIL_FROM_NAME', 'WorkInsight'),
             ],
         ],
 
