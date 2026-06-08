@@ -1,7 +1,6 @@
 docs/GIT_CREDENTIALS.md
 docs/tabler-1.4.0.zip
 docs/tabler-1.4.0/
-/public/tabler/
 *.log
 .DS_Store
 .env

@@ -2,7 +2,7 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
+use App\Domain\Access\Models\User;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
@@ -10,7 +10,8 @@ use Spatie\Permission\Models\Role;
 class RolesAndAdminSeeder extends Seeder
 {
     /**
-     * Seed the 5 application roles and a default admin user.
+     * Seed the 5 application roles and one verified dev user per role.
+     * Dev lozinka za sve: Admin1234!
      */
     public function run(): void
     {
@@ -20,16 +21,26 @@ class RolesAndAdminSeeder extends Seeder
             Role::findOrCreate($role, 'web');
         }
 
-        $admin = User::firstOrCreate(
-            ['email' => 'admin@workinsight.eu'],
-            [
-                'name' => 'WorkInsight Admin',
-                'password' => Hash::make('Admin1234!'),
-                'status' => 'active',
-                'email_verified_at' => now(),
-            ],
-        );
+        $users = [
+            ['admin@workinsight.eu', 'WorkInsight Admin', 'admin'],
+            ['customer@workinsight.eu', 'Test Customer', 'customer'],
+            ['company@workinsight.eu', 'Test Company', 'company'],
+            ['driver@workinsight.eu', 'Test Driver', 'driver'],
+            ['kitchen@workinsight.eu', 'Test Kitchen', 'kitchen'],
+        ];
 
-        $admin->syncRoles(['admin']);
+        foreach ($users as [$email, $name, $role]) {
+            $user = User::firstOrCreate(
+                ['email' => $email],
+                [
+                    'name' => $name,
+                    'password' => Hash::make('Admin1234!'),
+                    'status' => 'active',
+                    'email_verified_at' => now(),
+                ],
+            );
+
+            $user->syncRoles([$role]);
+        }
     }
 }
